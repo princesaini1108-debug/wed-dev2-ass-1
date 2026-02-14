@@ -1,53 +1,85 @@
-const eventform=document.getElementById("eventForm");
-const eventTitle=document.getElementById("eventTitle");
-const eventDate=document.getElementById("eventDate");
-const eventCategory=document.getElementById("eventCategory");
-const eventDescription=document.getElementById("eventDescription");
-const ClearAllBtn=document.getElementById("ClearAllBtn");
-const addSampleBtn=document.getElementById("addSampleBtn");
-const eventContainer=document.getElementById("eventContainer");
-const democontent=document.getElementById("democontent");
+const eventForm = document.getElementById("eventForm");
+const eventTitle = document.getElementById("eventTitle");
+const eventDate = document.getElementById("eventDate");
+const eventCategory = document.getElementById("eventCategory");
+const eventDescription = document.getElementById("eventDescription");
+const clearAllBtn = document.getElementById("clearAllBtn");
+const addSampleBtn = document.getElementById("addSampleBtn");
+const demoContent = document.getElementById("demoContent");
+const eventContainer = document.getElementById("eventContainer");
 
-const sampleEvents=[
+const sampleEvent = [
     {
-        title:"web dev",
-        date:"4-5-2026",
-        category:"workshop",
-        description:"used ius sijjnsf k ddk"
+        title: "web-Dev",
+        date: "4-5-23",
+        category: "workshop",
+        description: "iubuvihu ohfowihfw fuwbwi"
     },
     {
-        title:"web dev2",
-        date:"4-4-2026",
-        category:"conference",
-        description:"ffh f euh e eege egeg fdds",
+        title: "web-Dev2",
+        date: "3-3-25",
+        category: "confrence",
+        description: "nud buwouhw h9whg9wro g"
     }
-]
+];
 
-function createEventCard(eventData){
-   const card=document.createElement("div");
+eventForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-   card.innerHTML=`
-   <button class="delete-btn">X</button>
-   <h3>${eventData.title}</h3>
-   <div>${eventData.date}</div>
-   <span>${eventData.category}</span>
-   <p>${eventData.description}</p>
-   `
+    const eventData = {
+        title: eventTitle.value,
+        date: eventDate.value,
+        category: eventCategory.value,
+        description: eventDescription.value
+    };
 
-   return card;
+    addEvent(eventData);
+});
+
+function createEventCard(eventData) {
+    const card = document.createElement("div");
+    card.classList.add("event-card");   // FIXED
+
+    card.innerHTML = `
+        <button class="delete-btn">X</button>
+        <h3>${eventData.title}</h3>
+        <div>${eventData.date}</div>
+        <span>${eventData.category}</span>
+        <p>${eventData.description}</p>
+    `;
+
+    return card;
 }
-function addEvent(eventData){
-    const emptystate=document.querySelector(".empty-state");
-    emptystate.remove();
+
+function addEvent(eventData) {
+    const emptyState = document.querySelector(".empty-state");
+    if (emptyState) emptyState.remove();  // FIXED
+
     eventContainer.appendChild(createEventCard(eventData));
 }
-eventform.addEventListener("submit",(event)=>{
-    event.preventDefault();
-    const eventData={
-        title:eventTitle.value,
-        date:eventDate.value,
-        category:eventCategory.value,
-        description:eventDescription.value
+
+clearAllBtn.addEventListener("click", () => {
+    eventContainer.innerHTML = `<div class="empty-state">No events yet. Add your first event!</div>`; // FIXED
+});
+
+eventContainer.addEventListener("click", (event) => {
+    if (event.target.classList.contains("delete-btn")) {
+        const card = event.target.closest(".event-card"); // FIXED
+        if (card) card.remove();
     }
-    addEvent(eventData)
-})
+
+    if (!eventContainer.querySelector(".event-card")) {
+        eventContainer.innerHTML = `
+            <div class="empty-state">
+                No events yet. Add your first event!
+            </div>`
+    }
+
+});
+
+
+addSampleBtn.addEventListener("click", () => {
+    sampleEvent.forEach(event => {
+        addEvent(event);
+    });
+});
